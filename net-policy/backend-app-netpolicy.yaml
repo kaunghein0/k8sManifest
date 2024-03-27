@@ -1,0 +1,25 @@
+# applying network policy for connection will allow only ingress via 'backend-app'
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-allow-from-frontend
+  namespace: backend
+spec:
+  podSelector:
+    matchLabels:
+      podlabel: backend-app
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          nslabel: ns-frontend-web
+    - podSelector:
+        matchLabels:
+          podlabel: frontend-web
+    ports:
+    - protocol: TCP
+      port: 80
+

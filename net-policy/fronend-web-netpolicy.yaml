@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: multi-port-egress
+  namespace: frontend
+spec:
+  podSelector: {} # Allow all pods within frontend namespace
+  policyTypes:
+    - Egress
+    - Ingress
+  egress:
+  - {} # allow all out-going traffic
+  ingress:
+  - {} # allow all in-coming traffic

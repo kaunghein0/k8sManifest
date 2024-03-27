@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    nslabel: ns-frontend-web
+  name: frontend
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    deploylabel: dep-frontend-web  # Change label for Deployment
+  name: dep-frontend-web
+  namespace: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      podlabel: frontend-web  # Match label for pods managed by Deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        podlabel: frontend-web  # Change label for pods managed by Deployment
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    svclabel: svc-frontend-web # Change label for Service
+  name: svc-frontend-web
+  namespace: frontend
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    podlabel: frontend-web  # Match label for pods targeted by Service
+  type: ClusterIP
+

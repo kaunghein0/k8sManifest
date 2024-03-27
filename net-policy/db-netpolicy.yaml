@@ -1,0 +1,25 @@
+# allowing network policy for connection will allow only via 'backend-ap'
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: db
+spec:
+  podSelector:
+    matchLabels:
+      podlabel: database
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          nslabel: ns-backend-app
+    - podSelector:
+        matchLabels:
+          podlabel: backend-app
+    ports:
+    - protocol: TCP
+      port: 80
+

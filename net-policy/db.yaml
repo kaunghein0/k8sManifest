@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    nslabel: ns-db
+  name: db
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    deploylabel: dep-db  # Change label for Deployment
+  name: dep-db
+  namespace: db
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      podlabel: database  # Match label for pods managed by Deployment
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        podlabel: database  # Change label for pods managed by Deployment
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    svclabel: svc-db # Change label for Service
+  name: svc-db
+  namespace: db
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    podlabel: database  # Match label for pods targeted by Service
+  type: ClusterIP
+
